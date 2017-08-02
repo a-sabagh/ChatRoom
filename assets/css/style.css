@@ -18,7 +18,7 @@ and open the template in the editor.
 }
 .chat-body{
     height: 350px;
-    overflow: hidden;
+    overflow: scroll;
 }
 .user-msg {
     border: 1px solid #c9c9c9;
@@ -26,4 +26,7 @@ and open the template in the editor.
     padding: 5px;
     display: inline-block;
     margin: 5px auto;
+}
+body{
+    overflow-x: hidden;
 }
