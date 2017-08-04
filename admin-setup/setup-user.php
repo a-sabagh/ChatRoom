@@ -3,27 +3,28 @@ if (isset($_POST['setup_user']) && file_exists("config.php")) {
     include_once 'config.php';
     $dbh = new PDO("mysql:host=" . HOST . ";dbname=" . DB, USER, PASSWORD);
     $username = $_POST['username'];
-    $password = $_POST['password'];
+    $password = md5($_POST["password"]);
     $ip = $_SERVER['REMOTE_ADDR'];
     $statement = "INSERT INTO users(username , password , ip ) VALUES( :username , :password , :ip )";
     $stmt = $dbh->prepare($statement);
     $stmt->bindParam(":username", $username);
-    $stmt->bindParam(":password", md5($password));
+    $stmt->bindParam(":password", $password);
     $stmt->bindParam(":ip", $ip);
     $result = $stmt->execute();
     if ($result) {
-        session_destroy();
-        if (isset($_SESSION['login']))
-            unset($_SESSION['login']);
-        if (isset($_SESSION['username']))
-            unset($_SESSION['username']);
-        if (isset($_COOKIE['identifier'])) {
-            unset($_COOKIE['user_identifier']);
-            setcookie('user_identifier', '', -1);
+        if(session_status() == PHP_SESSION_NONE){
+            if (isset($_SESSION['chatroom_login']))
+                unset($_SESSION['chatroom_login']);
+            if (isset($_SESSION['chatroom_username']))
+                unset($_SESSION['chatroom_username']);
+            if (isset($_COOKIE['chatroom_identifier'])) {
+                unset($_COOKIE['chatroom_identifier']);
+                setcookie('chatroom_identifier', '', -1);
+            }
         }
-        if(isset($_COOKIE['username'])){
-            unset($_COOKIE['username']);
-            setcookie('username', '', -1);
+        if(isset($_COOKIE['chatroom_username'])){
+            unset($_COOKIE['chatroom_username']);
+            setcookie('chatroom_username', '', -1);
         }
         header("Location: ../index.php");
     }

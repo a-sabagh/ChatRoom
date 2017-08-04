@@ -1,3 +1,7 @@
+<?php
+session_start();
+$_SESSION['chatroom_message_time'] = 0;
+?>
 <?php require_once 'admin-setup/setup.php'; ?>
 <?php include_once 'login.php'; ?>
 <!DOCTYPE html>
@@ -27,12 +31,9 @@
                                     message: message
                                 },
                                 success: function (data) {
-                                    $(".chat-body").html(data);
+                                    $(".chat-input").val("");
+                                    $(".chat-body").scrollTop($(".chat-body").prop("scrollHeight"));
                                 }
-                            });
-                            jqxhr.always(function () {
-                                $(".chat-input").val("");
-                                $(".chat-body").scrollTop($(".chat-body").prop("scrollHeight"));
                             });
                         }
                     });
@@ -41,11 +42,12 @@
                             url: "msg-update.php",
                             method: "POST",
                             success: function (data) {
-                                $(".chat-body").html(data);
+                                $(".chat-body").append(data);
+                                $(".chat-body").scrollTop($(".chat-body").prop("scrollHeight"));
+                                update_chatroom();
                             }
                         });
                     }
-                    setInterval(update_chatroom, 1000);
                     update_chatroom();
                 });
             </script>

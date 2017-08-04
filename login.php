@@ -1,6 +1,8 @@
 <?php
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+}
 
-session_start();
 include_once "admin-setup/config.php";
 
 if (isset($_POST['login'])) {
@@ -19,6 +21,7 @@ function is_user_login() {
         return TRUE;
     } else {
         if (isset($_COOKIE['chatroom_identifier'])) {
+            $dbh = new PDO("mysql:host=" . HOST . ";dbname=" . DB, USER, PASSWORD);
             $statement = "SELECT * FROM users WHERE username=:username";
             $stat = $dbh->prepare($statement);
             $stat->bindParam(":username", $username);
